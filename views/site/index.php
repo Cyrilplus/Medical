@@ -2,52 +2,65 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = '医疗销售系统';
+
 ?>
-<div class="site-index">
+<div class="row">
+  <div class="col-lg-10 col-lg-offset-1">
+    <table class="table table-striped">
+      <caption>药品目录</caption>
+      <thead>
+        <tr>
+          <th>药品名称</th>
+          <th>生产厂家</th>
+          <th>数量</th>
+          <th>所在仓库</th>
+          <th>默认价格</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($products as $product): ?>
+          <tr>
+            <td><?php echo $product->product_name; ?></td>
+            <td><?php echo $product->getManufacturer()->one()->manufacturer_name; ?></td>
+            <td><?php echo $product->product_num; ?></td>
+            <td><?php echo $product->getRepository()->one()->repository_name; ?></td>
+            <td><?php echo $product->product_default_price; ?></td>
+          </tr>
+        <?php endforeach; ?>
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
+        <tr>
+          <td>后悔药</td>
+          <td>梦工厂</td>
+          <td>1</td>
+          <td>天庭</td>
+          <td>10000</td>
+        </tr>
+        <tr>
+          <td>后悔药</td>
+          <td>梦工厂</td>
+          <td>1</td>
+          <td>天庭</td>
+          <td>10000</td>
+        </tr>
+        <tr>
+          <td>后悔药</td>
+          <td>梦工厂</td>
+          <td>1</td>
+          <td>天庭</td>
+          <td>10000</td>
+        </tr>
+        <tr>
+          <td>后悔药</td>
+          <td>梦工厂</td>
+          <td>1</td>
+          <td>天庭</td>
+          <td>10000</td>
+        </tr>
+      </tbody>
+    </table>
+    <span>
+      <input type="button" name="add" value="添加药品" class="btn btn-primary pull-right">
+    </span>
+  </div>
 </div>

@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\UserAddress;
+use app\models\Product;
 
 class SiteController extends Controller
 {
@@ -52,7 +54,11 @@ class SiteController extends Controller
         if (\Yii::$app->user->isGuest) {
             return $this->redirect(array('/site/login'));
         } else {
-            return $this->render('index');
+            //print_r(\Yii::$app->user->name);
+            $userAddress = UserAddress::findOne(['user_address_id', \Yii::$app->user->identity->user_address_id]);
+            $products = Product::find()->all();
+
+            return $this->render('index', ['products' => $products]);
         }
     }
 
