@@ -2,6 +2,8 @@
 
 /* @var $this yii\web\View */
 
+use app\assets\AppAsset;
+
 $this->title = '医疗销售系统';
 
 ?>
@@ -28,39 +30,14 @@ $this->title = '医疗销售系统';
             <td><?php echo $product->product_default_price; ?></td>
           </tr>
         <?php endforeach; ?>
-
-        <tr>
-          <td>后悔药</td>
-          <td>梦工厂</td>
-          <td>1</td>
-          <td>天庭</td>
-          <td>10000</td>
-        </tr>
-        <tr>
-          <td>后悔药</td>
-          <td>梦工厂</td>
-          <td>1</td>
-          <td>天庭</td>
-          <td>10000</td>
-        </tr>
-        <tr>
-          <td>后悔药</td>
-          <td>梦工厂</td>
-          <td>1</td>
-          <td>天庭</td>
-          <td>10000</td>
-        </tr>
-        <tr>
-          <td>后悔药</td>
-          <td>梦工厂</td>
-          <td>1</td>
-          <td>天庭</td>
-          <td>10000</td>
-        </tr>
       </tbody>
     </table>
     <span>
-      <input type="button" name="add" value="添加药品" class="btn btn-primary pull-right">
+      <!-- <a href="?r=site/contact"><span class="btn btn-primary pull-right">添加药品</span></a> -->
+      <input type="button" name="add" value="添加药品" class="addProduct btn btn-primary pull-right">
+
     </span>
   </div>
 </div>
+
+<?php AppAsset::addJsFile($this, 'js/site.js'); ?>

@@ -10,6 +10,8 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\UserAddress;
 use app\models\Product;
+use app\models\Manufacturer;
+use app\models\Repository;
 
 class SiteController extends Controller
 {
@@ -98,6 +100,20 @@ class SiteController extends Controller
         return $this->render('contact', [
             'model' => $model,
         ]);
+    }
+
+    public function actionManufacturer()
+    {
+        $manufacturers = Manufacturer::find()->all();
+
+        return $this->render('manufacturer', ['manufacturers' => $manufacturers]);
+    }
+
+    public function actionRepository()
+    {
+        $repositories = Repository::find()->all();
+
+        return $this->render('repository', ['repositories' => $repositories]);
     }
 
     public function actionAbout()
