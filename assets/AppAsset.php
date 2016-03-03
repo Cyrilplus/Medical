@@ -32,6 +32,6 @@ class AppAsset extends AssetBundle
 
     public static function addJsFile($view, $jsFile)
     {
-        $view->registerJsFile('@web'.'/js/site.js', ['depends' => [self::className()]]);
+        $view->registerJsFile('@web'.$jsFile, ['depends' => [self::className()]]);
     }
 }

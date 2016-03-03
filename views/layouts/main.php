@@ -39,6 +39,7 @@ AppAsset::register($this);
             ['label' => '药品', 'url' => ['/site/index']],
             ['label' => '厂商', 'url' => ['/site/manufacturer']],
             ['label' => '仓库', 'url' => ['/site/repository']],
+            ['label' => '订单', 'url' => ['/site/order']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

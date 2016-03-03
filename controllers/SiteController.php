@@ -11,7 +11,13 @@ use app\models\ContactForm;
 use app\models\UserAddress;
 use app\models\Product;
 use app\models\Manufacturer;
+use app\models\ManufacturerAddress;
 use app\models\Repository;
+use app\models\AddProductForm;
+use app\models\AddManufacturerForm;
+use app\models\Region;
+use app\models\AddRepository;
+use app\models\RepositoryAddress;
 
 class SiteController extends Controller
 {
@@ -114,6 +120,94 @@ class SiteController extends Controller
         $repositories = Repository::find()->all();
 
         return $this->render('repository', ['repositories' => $repositories]);
+    }
+
+    public function actionAddproduct()
+    {
+        $model = new AddProductForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            print_r($model);
+            $product = new Product();
+            $product->product_name = $model->name;
+            $product->manufacturer_id = $model->manufacturer;
+            $product->product_num = $model->num;
+            $product->repository_id = $model->repository;
+            $product->product_default_price = $model->defaultPrice;
+            $product->save();
+
+            return $this->redirect(['site/index']);
+        } else {
+            $manufacturerDatabases = Manufacturer::find()->all();
+            $manufacturers = [];
+            foreach ($manufacturerDatabases as $manufacture) {
+                $manufacturers[$manufacture->manufacturer_id] = $manufacture->manufacturer_name;
+            }
+
+            $repositoryDatabases = Repository::find()->all();
+            $repositories = [];
+            foreach ($repositoryDatabases as $repository) {
+                $repositories[$repository->repository_id] = $repository->repository_name;
+            }
+
+            return $this->render('addProduct', ['model' => $model, 'manufacturers' => $manufacturers, 'repositories' => $repositories]);
+        }
+    }
+
+    public function actionAddmanufacturer()
+    {
+        $model = new AddManufacturerForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $address = new ManufacturerAddress();
+            $address->region_province_id = $model->regionProvince;
+            $address->region_city_id = $model->regionCity;
+            $address->region_country_id = $model->regionCountry;
+            $address->manufacturer_address = $model->detailAddress;
+            $address->save();
+            $manufacturer = new Manufacturer();
+            $manufacturer->manufacturer_name = $model->name;
+            $manufacturer->manufacturer_address_id = $address->manufacturer_address_id;
+            $manufacturer->save();
+
+            return $this->redirect(['/site/manufacturer']);
+        } else {
+            $regionProvinces = Region::getProvices();
+
+            return $this->render('AddManufacturer', ['model' => $model, 'regionProvinces' => $regionProvinces]);
+        }
+    }
+
+    public function actionGetregion()
+    {
+        if (isset(Yii::$app->request->post()['parentId'])) {
+            $parentId = Yii::$app->request->post()['parentId'];
+            $regions = Region::getRegionByParent($parentId);
+            echo json_encode($regions, JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    public function actionAddrepository()
+    {
+        $model = new AddRepository();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $address = new RepositoryAddress();
+            $address->region_province_id = $model->regionProvince;
+            $address->region_city_id = $model->regionCity;
+            $address->region_country_id = $model->regionCountry;
+            $address->repository_address = $model->detailAddress;
+            $address->save();
+            $repository = new Repository();
+            $repository->repository_address_id = $address->repository_address_id;
+            $repository->repository_name = $model->name;
+            $repository->repository_contact_name = $model->contactName;
+            $repository->repository_contact_call = $model->contactCall;
+            $repository->save();
+
+            return $this->redirect(['site/repository']);
+        } else {
+            $regionProvinces = Region::getProvices();
+
+            return $this->render('addRepository', ['model' => $model, 'regionProvinces' => $regionProvinces]);
+        }
     }
 
     public function actionAbout()

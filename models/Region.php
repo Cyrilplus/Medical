@@ -2,16 +2,13 @@
 
 namespace app\models;
 
-use Yii;
-
 /**
  * This is the model class for table "region".
  *
- * @property integer $region_id
- * @property integer $region_parent_id
+ * @property int $region_id
+ * @property int $region_parent_id
  * @property string $region_name
- * @property integer $region_type
- *
+ * @property int $region_type
  * @property ClientAddress[] $clientAddresses
  * @property ClientAddress[] $clientAddresses0
  * @property ClientAddress[] $clientAddresses1
@@ -29,7 +26,7 @@ use Yii;
 class Region extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -37,19 +34,19 @@ class Region extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['region_parent_id', 'region_name'], 'required'],
             [['region_parent_id', 'region_type'], 'integer'],
-            [['region_name'], 'string', 'max' => 45]
+            [['region_name'], 'string', 'max' => 45],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -163,5 +160,32 @@ class Region extends \yii\db\ActiveRecord
     public function getUserAddresses1()
     {
         return $this->hasMany(UserAddress::className(), ['region_country_id' => 'region_id']);
+    }
+
+    /*
+     * @return array
+     */
+    public static function getProvices()
+    {
+        $db = static::find()->where(['region_type' => 1])->all();
+        $regionProvinces = [];
+        foreach ($db as $row) {
+            $regionProvinces[$row->region_id] = $row->region_name;
+        }
+
+        return $regionProvinces;
+    }
+
+    public static function getRegionByParent($parentId)
+    {
+        $db = static::find()->where(['region_parent_id' => $parentId])->all();
+        $regions = [];
+        foreach ($db as $row) {
+            $region['id'] = $row->region_id;
+            $region['name'] = $row->region_name;
+            array_push($regions, $region);
+        }
+
+        return $regions;
     }
 }

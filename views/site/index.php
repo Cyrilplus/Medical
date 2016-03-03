@@ -33,11 +33,9 @@ $this->title = '医疗销售系统';
       </tbody>
     </table>
     <span>
-      <!-- <a href="?r=site/contact"><span class="btn btn-primary pull-right">添加药品</span></a> -->
-      <input type="button" name="add" value="添加药品" class="addProduct btn btn-primary pull-right">
-
+      <a href="?r=site/addproduct"><span class="btn btn-primary pull-right">添加药品</span></a>
     </span>
   </div>
 </div>
 
-<?php AppAsset::addJsFile($this, 'js/site.js'); ?>
+<!--<?php AppAsset::addJsFile($this, '/js/site.js'); ?>-->

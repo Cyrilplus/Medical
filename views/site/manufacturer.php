@@ -32,10 +32,6 @@ $this->title = '厂商';
         <?php endforeach; ?>
       </tbody>
     </table>
-    <span>
-      <!-- <a href="?r=site/contact"><span class="btn btn-primary pull-right">添加药品</span></a> -->
-      <input type="button" name="add" value="添加厂家" class="addProduct btn btn-primary pull-right">
-
-    </span>
+    <a href="?r=site/addmanufacturer"><span class="btn btn-primary pull-right">添加厂家</span></a>
   </div>
 </div>

@@ -33,9 +33,6 @@ $this->title = '仓库';
         <?php endforeach; ?>
       </tbody>
     </table>
-    <span>
-      <input type="button" name="add" value="添加厂家" class="addProduct btn btn-primary pull-right">
-
-    </span>
+    <a href="?r=site/addrepository"><span class="btn btn-primary pull-right">添加仓库</span></a>
   </div>
 </div>
