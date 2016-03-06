@@ -18,6 +18,8 @@ use app\models\AddManufacturerForm;
 use app\models\Region;
 use app\models\AddRepository;
 use app\models\RepositoryAddress;
+use app\models\Order;
+use app\models\OrderDetail;
 
 class SiteController extends Controller
 {
@@ -208,6 +210,20 @@ class SiteController extends Controller
 
             return $this->render('addRepository', ['model' => $model, 'regionProvinces' => $regionProvinces]);
         }
+    }
+
+    public function actionOrder()
+    {
+        $orders = Order::find()->all();
+        $orderDetails = [];
+        foreach ($orders as $order) {
+            $orderDetail = OrderDetail::find()->where(['order_id' => $order->order_id])->all();
+            $orderStruct['order'] = $order;
+            $orderStruct['detail'] = $orderDetail;
+            array_push($orderDetails, $orderStruct);
+        }
+
+        return $this->render('order', ['orders' => $orderDetails]);
     }
 
     public function actionAbout()
