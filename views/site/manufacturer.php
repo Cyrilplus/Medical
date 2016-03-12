@@ -3,11 +3,18 @@
 /* @var $this yii\web\View */
 /* @var $manufacturers app\Models\manufacturer*/
 
+use app\assets\AppAsset;
+
 $this->title = '厂商';
 ?>
+<style media="screen">
+   .addManufacturer{
+     margin: 10px;
+   }
+</style>
 <div class="row">
   <div class="col-lg-10 col-lg-offset-1">
-    <table class="table table-striped">
+    <table class="table table-striped" id="product">
       <caption>生产厂商</caption>
       <thead>
         <tr>
@@ -32,6 +39,8 @@ $this->title = '厂商';
         <?php endforeach; ?>
       </tbody>
     </table>
-    <a href="?r=site/addmanufacturer"><span class="btn btn-primary pull-right">添加厂家</span></a>
+    <a href="?r=site/addmanufacturer"><span class="btn btn-primary pull-right addManufacturer">添加厂家</span></a>
   </div>
 </div>
+<?php AppAsset::addJsFile($this, '/js/jquery.dataTables.min.js'); ?>
+<?php AppAsset::addJsFile($this, '/js/index.js'); ?>

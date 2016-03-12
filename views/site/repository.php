@@ -3,11 +3,18 @@
 /* @var $this yii\web\View */
 /* @var $manufacturers app\Models\manufacturer*/
 
+use app\assets\AppAsset;
+
 $this->title = '仓库';
 ?>
+<style media="screen">
+   .addRepository{
+     margin: 10px;
+   }
+</style>
 <div class="row">
   <div class="col-lg-10 col-lg-offset-1">
-    <table class="table table-striped">
+    <table class="table table-striped" id="product">
       <caption>仓库</caption>
       <thead>
         <tr>
@@ -33,6 +40,8 @@ $this->title = '仓库';
         <?php endforeach; ?>
       </tbody>
     </table>
-    <a href="?r=site/addrepository"><span class="btn btn-primary pull-right">添加仓库</span></a>
+    <a href="?r=site/addrepository"><span class="btn btn-primary pull-right addRepository">添加仓库</span></a>
   </div>
 </div>
+<?php AppAsset::addJsFile($this, '/js/jquery.dataTables.min.js'); ?>
+<?php AppAsset::addJsFile($this, '/js/index.js'); ?>

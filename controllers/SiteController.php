@@ -20,6 +20,7 @@ use app\models\AddRepository;
 use app\models\RepositoryAddress;
 use app\models\Order;
 use app\models\OrderDetail;
+use app\models\AddOrderForm;
 
 class SiteController extends Controller
 {
@@ -224,6 +225,19 @@ class SiteController extends Controller
         }
 
         return $this->render('order', ['orders' => $orderDetails]);
+    }
+
+    public function actionAddorder()
+    {
+        $model = new AddOrderForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            var_dump($model->productId);
+        } else {
+            $userAddress = UserAddress::findOne(['user_address_id', \Yii::$app->user->identity->user_address_id]);
+            $products = Product::find()->all();
+
+            return $this->render('addOrder', ['products' => $products, 'model' => $model]);
+        }
     }
 
     public function actionAbout()

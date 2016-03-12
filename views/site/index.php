@@ -7,9 +7,14 @@ use app\assets\AppAsset;
 $this->title = '医疗销售系统';
 
 ?>
+<style media="screen">
+   .addProduct{
+     margin: 10px;
+   }
+</style>
 <div class="row">
   <div class="col-lg-10 col-lg-offset-1">
-    <table class="table table-striped">
+    <table class="table table-striped" id="product">
       <caption>药品目录</caption>
       <thead>
         <tr>
@@ -33,9 +38,10 @@ $this->title = '医疗销售系统';
       </tbody>
     </table>
     <span>
-      <a href="?r=site/addproduct"><span class="btn btn-primary pull-right">添加药品</span></a>
+      <a href="?r=site/addproduct"><span class="btn btn-primary pull-right addProduct">添加药品</span></a>
     </span>
   </div>
 </div>
 
-<!--<?php AppAsset::addJsFile($this, '/js/site.js'); ?>-->
+<?php AppAsset::addJsFile($this, '/js/jquery.dataTables.min.js'); ?>
+<?php AppAsset::addJsFile($this, '/js/index.js'); ?>
