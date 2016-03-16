@@ -4,7 +4,7 @@ use app\assets\AppAsset;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\AddOrderForm */
+/* @var $model app\models\AddDispatchForm */
 /* @var $form ActiveForm */
 
 $this->title = '销售';
@@ -21,9 +21,8 @@ $this->title = '销售';
       'options' => ['class' => 'form-horizontal'],
   ]); ?>
       <caption>药品目录</caption>
-      <?= $form->field($model, 'client')->dropDownList($clients)->label('客户')  ?>
+      <?= $form->field($model, 'repository')->dropDownList($repositories)->label('目标仓库')  ?>
       <table class="table table-striped" id="product">
-
         <thead>
           <tr>
             <th>药品名称</th>
@@ -31,7 +30,7 @@ $this->title = '销售';
             <th>数量</th>
             <th>所在仓库</th>
             <th>默认价格</th>
-            <th>购买</th>
+            <th>调度数量</th>
           </tr>
         </thead>
         <tbody>

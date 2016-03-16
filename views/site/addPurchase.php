@@ -5,9 +5,10 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\AddOrderForm */
+/* @var $product app\models\Product */
 /* @var $form ActiveForm */
 
-$this->title = '销售';
+$this->title = '采购';
 ?>
 <style media="screen">
    .addProduct{
@@ -21,9 +22,7 @@ $this->title = '销售';
       'options' => ['class' => 'form-horizontal'],
   ]); ?>
       <caption>药品目录</caption>
-      <?= $form->field($model, 'client')->dropDownList($clients)->label('客户')  ?>
       <table class="table table-striped" id="product">
-
         <thead>
           <tr>
             <th>药品名称</th>

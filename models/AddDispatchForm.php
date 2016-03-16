@@ -4,16 +4,16 @@ namespace app\models;
 
 use yii\base\Model;
 
-class AddOrderForm extends Model
+class AddDispatchForm extends Model
 {
     public $productId;
     public $productNum;
-    public $client;
+    public $repository;
 
     public function rules()
     {
         return [
-      [['productId', 'productNum', 'client'], 'required'],
+      [['productId', 'productNum', 'repository'], 'required'],
     ];
     }
 }

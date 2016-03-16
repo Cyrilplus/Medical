@@ -21,6 +21,15 @@ use app\models\RepositoryAddress;
 use app\models\Order;
 use app\models\OrderDetail;
 use app\models\AddOrderForm;
+use app\models\Client;
+use app\models\AddClientForm;
+use app\models\ClientAddress;
+use app\models\Purchase;
+use app\models\PurchaseDetail;
+use app\models\AddPurchaseForm;
+use app\models\Dispatch;
+use app\models\DispatchDetail;
+use app\models\AddDispatchForm;
 
 class SiteController extends Controller
 {
@@ -65,7 +74,6 @@ class SiteController extends Controller
         if (\Yii::$app->user->isGuest) {
             return $this->redirect(array('/site/login'));
         } else {
-            //print_r(\Yii::$app->user->name);
             $userAddress = UserAddress::findOne(['user_address_id', \Yii::$app->user->identity->user_address_id]);
             $products = Product::find()->all();
 
@@ -125,6 +133,12 @@ class SiteController extends Controller
         return $this->render('repository', ['repositories' => $repositories]);
     }
 
+    public function actionClient()
+    {
+        $clients = Client::find()->all();
+
+        return $this->render('client', ['clients' => $clients]);
+    }
     public function actionAddproduct()
     {
         $model = new AddProductForm();
@@ -179,6 +193,29 @@ class SiteController extends Controller
         }
     }
 
+    public function actionAddclient()
+    {
+        $model = new AddClientForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $address = new ClientAddress();
+            $address->region_province_id = $model->regionProvince;
+            $address->region_city_id = $model->regionCity;
+            $address->region_country_id = $model->regionCountry;
+            $address->client_address = $model->detailAddress;
+            $address->save();
+            $client = new Client();
+            $client->client_name = $model->name;
+            $client->client_address_id = $address->client_address_id;
+            $client->save();
+
+            return $this->redirect(['/site/client']);
+        } else {
+            $regionProvinces = Region::getProvices();
+
+            return $this->render('addClient', ['model' => $model, 'regionProvinces' => $regionProvinces]);
+        }
+    }
+
     public function actionGetregion()
     {
         if (isset(Yii::$app->request->post()['parentId'])) {
@@ -227,16 +264,144 @@ class SiteController extends Controller
         return $this->render('order', ['orders' => $orderDetails]);
     }
 
+    public function actionPurchase()
+    {
+        $purchases = Purchase::find()->all();
+        $purchaseDetails = [];
+        foreach ($purchases as $purchase) {
+            $purchaseDetail = PurchaseDetail::find()->where(['purchase_id' => $purchase->purchase_id])->all();
+            $purchaseStruct['order'] = $purchase;
+            $purchaseStruct['detail'] = $purchaseDetail;
+            array_push($purchaseDetails, $purchaseStruct);
+        }
+
+        return $this->render('purchase', ['purchases' => $purchaseDetails]);
+    }
+
+    public function actionDispatch()
+    {
+        $dispatchs = Dispatch::find()->all();
+        $dispatchDetails = [];
+        foreach ($dispatchs as $dispatch) {
+            $purchaseDetail = DispatchDetail::find()->where(['dispatch_id' => $dispatch->dispatch_id])->all();
+            $dispatchStruct['order'] = $dispatch;
+            $dispatchStruct['detail'] = $purchaseDetail;
+            array_push($dispatchDetails, $dispatchStruct);
+        }
+
+        return $this->render('dispatch', ['dispatchs' => $dispatchDetails]);
+    }
+
     public function actionAddorder()
     {
         $model = new AddOrderForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            var_dump($model->productId);
+            $order = new Order();
+            $order->order_status = 0;
+            $order->client_id = $model->client;
+            $order->order_total_money = 0;
+            $order->save();
+            $totalMoney = 0;
+            $len = count($model->productId);
+            for ($i = 0; $i < $len; ++$i) {
+                $productId = intval($model->productId[$i]);
+                $productNum = intval($model->productNum[$i]);
+
+                if ($productNum > 0) {
+                    $orderDetail = new OrderDetail();
+                    $orderDetail->order_id = $order->order_id;
+                    $orderDetail->product_id = $productId;
+                    $orderDetail->product_num = $productNum;
+                    $product = Product::find()->where(['product_id' => $productId])->one();
+                    $orderDetail->order_detail_total_money = $product->product_default_price * $productNum;
+                    $totalMoney = $totalMoney + $orderDetail->order_detail_total_money;
+                    $orderDetail->save();
+                }
+            }
+            $order->order_total_money = $totalMoney;
+            $order->save();
+
+            return $this->redirect(['site/order']);
         } else {
             $userAddress = UserAddress::findOne(['user_address_id', \Yii::$app->user->identity->user_address_id]);
             $products = Product::find()->all();
+            $clientDb = Client::find()->all();
+            $clients = [];
+            foreach ($clientDb as $client) {
+                $clients[$client->client_id] = $client->client_name;
+            }
 
-            return $this->render('addOrder', ['products' => $products, 'model' => $model]);
+            return $this->render('addOrder', ['products' => $products, 'model' => $model, 'clients' => $clients]);
+        }
+    }
+
+    public function actionAddpurchase()
+    {
+        $model = new AddPurchaseForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $purchase = new Purchase();
+            $purchase->purchase_status = 0;
+            $purchase->purchase_total_money = 0;
+            $purchase->save();
+            $totalMoney = 0;
+            $len = count($model->productId);
+            for ($i = 0; $i < $len; ++$i) {
+                $productId = intval($model->productId[$i]);
+                $productNum = intval($model->productNum[$i]);
+
+                if ($productNum > 0) {
+                    $purchaseDetail = new PurchaseDetail();
+                    $purchaseDetail->purchase_id = $purchase->purchase_id;
+                    $purchaseDetail->product_id = $productId;
+                    $purchaseDetail->product_num = $productNum;
+                    $product = Product::find()->where(['product_id' => $productId])->one();
+                    $purchaseDetail->purchase_detail_total_money = $product->product_default_price * $productNum;
+                    $totalMoney = $totalMoney + $purchaseDetail->purchase_detail_total_money;
+                    $purchaseDetail->save();
+                }
+            }
+            $purchase->purchase_total_money = $totalMoney;
+            $purchase->save();
+
+            return $this->redirect(['site/purchase']);
+        } else {
+            $products = Product::find()->all();
+
+            return $this->render('addPurchase', ['products' => $products, 'model' => $model]);
+        }
+    }
+
+    public function actionAdddispatch()
+    {
+        $model = new AddDispatchForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $dispatch = new Dispatch();
+            $dispatch->dispatch_status = 0;
+            $dispatch->repository_to_id = $model->repository;
+            $dispatch->save();
+            $len = count($model->productId);
+            for ($i = 0; $i < $len; ++$i) {
+                $productId = intval($model->productId[$i]);
+                $productNum = intval($model->productNum[$i]);
+                if ($productNum > 0) {
+                    $dispatchDetail = new DispatchDetail();
+                    $dispatchDetail->dispatch_id = $dispatch->dispatch_id;
+                    $dispatchDetail->product_id = $productId;
+                    $dispatchDetail->product_num = $productNum;
+                    $dispatchDetail->save();
+                }
+            }
+
+            return $this->redirect(['site/dispatch']);
+        } else {
+            $products = Product::find()->all();
+            $repositoryDb = Repository::find()->all();
+            $repositories = [];
+            foreach ($repositoryDb as $repository) {
+                $repositories[$repository->repository_id] = $repository->repository_name;
+            }
+
+            return $this->render('addDispatch', ['products' => $products, 'model' => $model, 'repositories' => $repositories]);
         }
     }
 
